@@ -1,0 +1,23 @@
+update HIGH_AGE_CD.dbo.TEST
+set ACODE_ICD9_1 = RTRIM(ACODE_ICD9_1), ACODE_ICD9_2 = RTRIM(ACODE_ICD9_2), ACODE_ICD9_3 = RTRIM(ACODE_ICD9_3)
+
+update HIGH_AGE_CD.dbo.TEST
+set ACODE_ICD9_1 = concat(ACODE_ICD9_1,REPLICATE('0', 5-LEN(ACODE_ICD9_1))),ACODE_ICD9_2 = concat(ACODE_ICD9_2,REPLICATE('0', 5-LEN(ACODE_ICD9_2))),ACODE_ICD9_3 = concat(ACODE_ICD9_3,REPLICATE('0', 5-LEN(ACODE_ICD9_3)))
+
+
+declare @i int
+declare @o nvarchar(1)
+set @i = 1996
+set @o = '0'
+while @i <= 2013
+begin
+exec('update HIGH_AGE_CD.dbo.cd'+@i+'
+set ACODE_ICD9_1 = RTRIM(ACODE_ICD9_1), ACODE_ICD9_2 = RTRIM(ACODE_ICD9_2), ACODE_ICD9_3 = RTRIM(ACODE_ICD9_3)
+')
+exec('
+update HIGH_AGE_CD.dbo.cd'+@i+'
+set ACODE_ICD9_1 = concat(ACODE_ICD9_1,REPLICATE('+@o+', 5-LEN(ACODE_ICD9_1))),ACODE_ICD9_2 = concat(ACODE_ICD9_2,REPLICATE('+@o+', 5-LEN(ACODE_ICD9_2))),ACODE_ICD9_3 = concat(ACODE_ICD9_3,REPLICATE('+@o+', 5-LEN(ACODE_ICD9_3)))
+')
+PRINT(@I+' DONE')
+set @i = @i + 1
+end;

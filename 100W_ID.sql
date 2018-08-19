@@ -1,0 +1,96 @@
+WITH B AS(
+	SELECT distinct ID as ID FROM [HIGH_AGE_CD].[dbo].[CD1996]
+	UNION ALL
+	SELECT distinct ID as ID FROM [HIGH_AGE_CD].[dbo].[CD1997]
+	UNION ALL
+	SELECT distinct ID as ID FROM [HIGH_AGE_CD].[dbo].[CD1998]
+	UNION ALL
+	SELECT distinct ID as ID FROM [HIGH_AGE_CD].[dbo].[CD1999]
+	UNION ALL
+	SELECT distinct ID as ID FROM [HIGH_AGE_CD].[dbo].[CD2000]
+	UNION ALL
+	SELECT distinct ID as ID FROM [HIGH_AGE_CD].[dbo].[CD2001]
+	UNION ALL
+	SELECT distinct ID as ID FROM [HIGH_AGE_CD].[dbo].[CD2002]
+	UNION ALL
+	SELECT distinct ID as ID FROM [HIGH_AGE_CD].[dbo].[CD2003]
+	UNION ALL
+	SELECT distinct ID as ID FROM [HIGH_AGE_CD].[dbo].[CD2004]
+	UNION ALL
+	SELECT distinct ID as ID FROM [HIGH_AGE_CD].[dbo].[CD2005]
+	UNION ALL 
+	SELECT distinct ID as ID FROM [HIGH_AGE_CD].[dbo].[CD2006]
+	UNION ALL
+	SELECT distinct ID as ID FROM [HIGH_AGE_CD].[dbo].[CD2007]
+	UNION ALL
+	SELECT distinct ID as ID FROM [HIGH_AGE_CD].[dbo].[CD2008]
+	UNION ALL
+	SELECT distinct ID as ID FROM [HIGH_AGE_CD].[dbo].[CD2009]
+	UNION ALL
+	SELECT distinct ID as ID FROM [HIGH_AGE_CD].[dbo].[CD2010]
+	UNION ALL
+	SELECT distinct ID as ID FROM [HIGH_AGE_CD].[dbo].[CD2011]
+	UNION ALL
+	SELECT distinct ID as ID FROM [HIGH_AGE_CD].[dbo].[CD2012]
+	UNION ALL
+	SELECT distinct ID as ID FROM [HIGH_AGE_CD].[dbo].[CD2013]
+)
+SELECT distinct ID
+INTO HIGH_AGE_ID.DBO.ID100W
+FROM B
+
+-- 新增ID2002~ID2013百萬人抽樣檔
+-- 在ID普查檔中,挑出ID有出現在ID100W中的那些筆
+DECLARE @I INT
+SET @I = 2002
+WHILE @I <= 2009
+BEGIN
+
+EXEC('
+SELECT [ID]
+      ,[INS_ID]
+      ,[INS_ID_TYPE]
+      ,[INS_AMT]
+      ,[ID_BIRTHDAY]
+      ,[ID_SEX]
+      ,[INS_RELATION]
+      ,[UNIT_INS_TYPE]
+      ,[AREA_NO_I]
+      ,[ID_IN_TYPE]
+      ,[ID_IN_DATE]
+      ,[ID_OUT_TYPE]
+      ,[ID_OUT_DATE]
+INTO HIGH_AGE_ID.DBO.ID'+@I+'
+FROM ID.DBO.ID'+@I+'
+WHERE ID IN (SELECT ID FROM ID100W)
+')
+
+SET @I = @I + 1
+END
+
+
+DECLARE @J INT
+SET @J = 2010
+WHILE @J <= 2013
+BEGIN
+
+EXEC('
+SELECT [ID]
+      ,[INS_ID]
+      ,[INS_ID_TYPE]
+      ,[INS_AMT]
+      ,[ID_BIRTHDAY]
+      ,[ID_SEX]
+      ,[INS_RELATION]
+      ,[UNIT_INS_TYPE]
+      ,[REG_ZIP_CODE]
+      ,[TX_CODE]
+      ,[ID_IN_DATE]
+      ,[ID_OUT_DATE]
+INTO HIGH_AGE_ID.DBO.ID'+@J+'
+FROM ID.DBO.ID'+@J+'
+WHERE ID IN (SELECT ID FROM ID100W)
+')
+
+SET @J = @J + 1
+END
